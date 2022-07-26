@@ -1,7 +1,14 @@
 const inquirer = require('inquirer');
 const Employee = require('./lib/Employee');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const Manager = require('./lib/Manager');
 
-const newEmployee = function(data) {
+const buildSite = require('./template')
+
+const employees = [];
+
+const questionnaire = function() {
     return inquirer
     .prompt([
         {
@@ -19,56 +26,57 @@ const newEmployee = function(data) {
         },
         {
             type: 'input',
+            name: 'id',
+            message: `Please type the employee's ID number.`
+        },
+        {
+            type: 'input',
             name: 'email',
-            message: "Please enter the employee's email address."
+            message: `Please enter the employee's email address.`
         },
         {
             type: 'input',
             name: 'github',
-            message: "Please enter the employee's GitHub username",
-            when: ({ role }) => {
+            message: `Please enter the employee's GitHub username.`,
+            when: (({ role }) => {
                 if (role === 'Engineer') {
                     return true;
                 }
                 return false;
-            }
-        },
-        {
-            type: 'input',
-            name: 'officeNum',
-            message: "Please enter the manager's office number.",
-            when: ({ role }) => {
-                if (role === 'Manager') {
-                    return true;
-                }
-                return false;
-            }
+            })
         },
         {
             type: 'input',
             name: 'school',
-            message: "Please enter the name of the Intern's school.",
-            when: ({ role }) => {
+            message: 'What school does this intern attend?',
+            when: (({ role }) => {
                 if (role === 'Intern') {
                     return true;
                 }
                 return false;
-            }
+            })
+        },
+        {
+            type: 'input',
+            name: 'office',
+            message: "What is this manager's office number?",
+            when: (({ role }) => {
+                if (role === 'Manager') {
+                    return true;
+                }
+                return false;
+            })
         }
     ])
-    .then(({ role }) => {
+    .then(results => {
         if (role === 'Engineer') {
-            return new Engineer;
-
+            employees.push(new Engineer(results))
         } else if (role === 'Intern') {
-            return new Intern;
-
+            employees.push(new Intern(results))
         } else if (role === 'Manager') {
-            return new Manager;
-            
+            employees.push(new Manager(results))
         }
     })
-
 }
 
 const initialize = function() {
@@ -77,5 +85,24 @@ const initialize = function() {
     WELCOME TO THE TEAM GENERATOR
     ==============================
     `)
-    newEmployee();
-}
+    
+    if (!employees) {
+        questionnaire();
+    } else if (employees) {
+        return inquirer
+        .prompt({
+            type: 'confirm',
+            name: 'employeeConfirm',
+            message: 'Would you like to add another employee?',
+            when: ({employeeConfirm}) => {
+                if (employeeConfirm) {
+                    questionnaire();
+                } else {
+                    buildSite(employees)
+                }
+            }
+        });
+    };
+};
+
+initialize();
