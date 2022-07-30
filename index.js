@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
 const Employee = require('./lib/Employee');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -7,6 +8,28 @@ const Manager = require('./lib/Manager');
 const buildSite = require('./template')
 
 const employees = [];
+
+const beginnerPrompt = function() {
+        return inquirer
+        .prompt({
+            type: 'confirm',
+            name: 'employeeConfirm',
+            message: 'Would you like to add another employee?'
+        }) 
+        .then(({employeeConfirm}) => {
+            if (employeeConfirm) {
+                questionnaire();
+            } else {
+                const employeeData = buildSite(employees);
+
+                fs.writeFile('./index.html', employeeData, err => {
+                    if (err) throw new Error (err);
+
+                    console.log('Your team is now ready.')
+                })
+            }
+        });
+};
 
 const questionnaire = function() {
     return inquirer
@@ -17,7 +40,7 @@ const questionnaire = function() {
             message: "What is the name of the employee you're adding?"
         },
         {
-            type: 'choices',
+            type: 'list',
             name: 'role',
             message: 'Please pick a role for this employee',
             choices: [
@@ -69,15 +92,20 @@ const questionnaire = function() {
         }
     ])
     .then(results => {
-        if (role === 'Engineer') {
-            employees.push(new Engineer(results))
-        } else if (role === 'Intern') {
-            employees.push(new Intern(results))
-        } else if (role === 'Manager') {
-            employees.push(new Manager(results))
+        switch (results.role) {
+            case results.role === 'Engineer':
+                employees.push(new Engineer(results));
+                break;
+            case results.role === 'Intern':
+                employees.push(new Intern(results));
+                break;
+            case results.role === 'Manager':
+                employees.push(new Manager(results));
+                break;
         }
     })
-}
+    .then(beginnerPrompt);
+};
 
 const initialize = function() {
     console.log(`
@@ -86,23 +114,7 @@ const initialize = function() {
     ==============================
     `)
     
-    if (!employees) {
-        questionnaire();
-    } else if (employees) {
-        return inquirer
-        .prompt({
-            type: 'confirm',
-            name: 'employeeConfirm',
-            message: 'Would you like to add another employee?',
-            when: ({employeeConfirm}) => {
-                if (employeeConfirm) {
-                    questionnaire();
-                } else {
-                    buildSite(employees)
-                }
-            }
-        });
-    };
+    questionnaire();
 };
 
 initialize();
