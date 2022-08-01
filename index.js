@@ -10,6 +10,7 @@ const buildSite = require('./template')
 const employees = [];
 
 const beginnerPrompt = function() {
+        console.log(employees)
         return inquirer
         .prompt({
             type: 'confirm',
@@ -92,16 +93,13 @@ const questionnaire = function() {
         }
     ])
     .then(results => {
-        switch (results.role) {
-            case results.role === 'Engineer':
-                employees.push(new Engineer(results));
-                break;
-            case results.role === 'Intern':
-                employees.push(new Intern(results));
-                break;
-            case results.role === 'Manager':
-                employees.push(new Manager(results));
-                break;
+        console.log(results)
+        if (results.role === 'Engineer') {
+           employees.push(new Engineer(results)); 
+        } else if (results.role === 'Intern') {
+           employees.push(new Intern(results)); 
+        } else if (results.role === 'Manager') {
+            employees.push(new Manager(results));
         }
     })
     .then(beginnerPrompt);
