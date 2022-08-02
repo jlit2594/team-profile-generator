@@ -42,9 +42,8 @@ const teamBuilder = employeeData => {
     };
 };
 
-module.exports = employees => {
-    employees.map({ Engineer, Intern, Manager });
-    return `
+const buildSite = employees => {
+       return `
         <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -54,8 +53,13 @@ module.exports = employees => {
         <title>Our Team</title>
     </head>
     <body>
-        ${employees.forEach(teamBuilder(Engineer, Intern, Manager))}
+        ${employees.map( Engineer, Intern, Manager  => {
+            return teamBuilder();
+        })}
     </body>
     </html>
-    `  
+    `     
 }
+ 
+    
+module.exports = buildSite;
