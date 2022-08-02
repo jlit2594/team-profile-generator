@@ -53,7 +53,7 @@ const buildSite = employees => {
         <title>Our Team</title>
     </head>
     <body>
-        ${employees.map( Engineer, Intern, Manager  => {
+        ${employees.forEach( Engineer, Intern, Manager  => {
             return teamBuilder();
         })}
     </body>
