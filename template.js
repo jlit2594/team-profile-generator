@@ -1,21 +1,49 @@
-// const teamBuilder = teamData => {
-//     const { name, role, id, email, github, office, school } = teamData;
-//         for (let i = 0; i < teamData.length; i++) {
-//            return `
-//         <div>
-//             <h1>${name[i]}</h1>
-//             <h2>${role[i]}</h2>
-//             <h3>${id[i]}</h3>
-//             <div>
-//                 <h3>${email[i]} | ${github[i]}</h3>
-//             </div>
-//             <h3>${office[i]}${school[i]}</h3>
-//         <div> 
-//         `   
-//     }
-// }
+// const employees = require('./index');
+const Employee = require('./lib/Employee');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const Manager = require('./lib/Manager');
 
-module.exports = teamArr => {
+const teamBuilder = employeeData => {
+    const { role, name, id, email, github, office, school} = employeeData;
+    if (role === 'Engineer') {
+        return `
+        <div>
+            <h1>${name}</h1>
+            <h2>${role}</h2>
+            <h3>${id}</h3>
+            <div>
+                <h3>${email} | ${github}</h3>
+            </div>
+        <div> 
+        `
+    } else if (role === 'Manager') {
+        return `
+        <div>
+            <h1>${name}</h1>
+            <h2>${role}</h2>
+            <h3>${id}</h3>
+            <div>
+                <h3>${email} | ${office}</h3>
+            </div>
+        <div> 
+        `       
+    } else if (role === 'Intern') {
+        return `
+        <div>
+            <h1>${name}</h1>
+            <h2>${role}</h2>
+            <h3>${id}</h3>
+            <div>
+                <h3>${email} | ${school}</h3>
+            </div>
+        <div> 
+        `
+    };
+};
+
+module.exports = employees => {
+    employees.map({ Engineer, Intern, Manager });
     return `
         <!DOCTYPE html>
     <html lang="en">
@@ -26,22 +54,8 @@ module.exports = teamArr => {
         <title>Our Team</title>
     </head>
     <body>
-        ${teamArr.map(({ name, role, id, email, github, office, school}) => {
-            for (let i = 0; i < teamArr.length; i++) {
-                return `
-             <div>
-                 <h1>${name[i]}</h1>
-                 <h2>${role[i]}</h2>
-                 <h3>${id[i]}</h3>
-                 <div>
-                     <h3>${email[i]} | ${github[i]}</h3>
-                 </div>
-                 <h3>${office[i]}${school[i]}</h3>
-             <div> 
-             ` 
-            }
-        })}
+        ${employees.forEach(teamBuilder(Engineer, Intern, Manager))}
     </body>
     </html>
-    `
+    `  
 }

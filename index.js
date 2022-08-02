@@ -10,8 +10,7 @@ const buildSite = require('./template')
 const employees = [];
 
 const beginnerPrompt = function() {
-        console.log(employees)
-        return inquirer
+        inquirer
         .prompt({
             type: 'confirm',
             name: 'employeeConfirm',
@@ -33,7 +32,7 @@ const beginnerPrompt = function() {
 };
 
 const questionnaire = function() {
-    return inquirer
+    inquirer
     .prompt([
         {
             type: 'input',
@@ -93,13 +92,12 @@ const questionnaire = function() {
         }
     ])
     .then(results => {
-        console.log(results)
         if (results.role === 'Engineer') {
-           employees.push(new Engineer(results)); 
+           employees.push(new Engineer(results.role, results.name, results.id, results.email, results.github)); 
         } else if (results.role === 'Intern') {
-           employees.push(new Intern(results)); 
+           employees.push(new Intern(results.role, results.name, results.id, results.email, results.school)); 
         } else if (results.role === 'Manager') {
-            employees.push(new Manager(results));
+            employees.push(new Manager(results.role, results.name, results.id, results.email, results.office));
         }
     })
     .then(beginnerPrompt);
