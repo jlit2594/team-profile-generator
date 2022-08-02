@@ -1,41 +1,13 @@
-// const employees = require('./index');
-const Employee = require('./lib/Employee');
-const Engineer = require('./lib/Engineer');
-const Intern = require('./lib/Intern');
-const Manager = require('./lib/Manager');
-
-const teamBuilder = employeeData => {
-    const { role, name, id, email, github, office, school} = employeeData;
-    if (role === 'Engineer') {
+function teamBuilder(employees) {
+    console.log(employees);
+    for (let i = 0; i < employees.length; i++) {
         return `
         <div>
-            <h1>${name}</h1>
-            <h2>${role}</h2>
-            <h3>${id}</h3>
+            <h1>${employees[i].name}</h1>
+            <h2>${employees[i].role}</h2>
+            <h3>${employees[i].id}</h3>
             <div>
-                <h3>${email} | ${github}</h3>
-            </div>
-        <div> 
-        `
-    } else if (role === 'Manager') {
-        return `
-        <div>
-            <h1>${name}</h1>
-            <h2>${role}</h2>
-            <h3>${id}</h3>
-            <div>
-                <h3>${email} | ${office}</h3>
-            </div>
-        <div> 
-        `       
-    } else if (role === 'Intern') {
-        return `
-        <div>
-            <h1>${name}</h1>
-            <h2>${role}</h2>
-            <h3>${id}</h3>
-            <div>
-                <h3>${email} | ${school}</h3>
+                <h3>${employees[i].email} | ${employees[i].github || employees[i].office || employees[i].school}</h3>
             </div>
         <div> 
         `
@@ -43,8 +15,8 @@ const teamBuilder = employeeData => {
 };
 
 const buildSite = employees => {
-       return `
-        <!DOCTYPE html>
+    return `
+    <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -53,9 +25,7 @@ const buildSite = employees => {
         <title>Our Team</title>
     </head>
     <body>
-        ${employees.forEach( Engineer, Intern, Manager  => {
-            return teamBuilder();
-        })}
+        ${teamBuilder(employees)}
     </body>
     </html>
     `     
