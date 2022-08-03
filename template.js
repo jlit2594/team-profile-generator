@@ -1,7 +1,8 @@
 function teamBuilder(employees) {
     console.log(employees);
+    // it only returns the first value unfortunately. not sure why.
     for (let i = 0; i < employees.length; i++) {
-        return `
+        `
         <div>
             <h1>${employees[i].name}</h1>
             <h2>${employees[i].role}</h2>
@@ -14,6 +15,7 @@ function teamBuilder(employees) {
     };
 };
 
+// builds the html page
 const buildSite = employees => {
     return `
     <!DOCTYPE html>
